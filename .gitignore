@@ -160,4 +160,6 @@ cython_debug/
 #.idea/
 
 data/
-data_clean/
+# Not Ignore data_clean.csv file
+src/data_clean/*
+!src/data_clean/data_clean.csv
