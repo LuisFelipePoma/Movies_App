@@ -1,11 +1,11 @@
 # Recomendation_System
----
+
 ## Index
 - [Recomendation\_System](#recomendation_system)
 	- [Index](#index)
 	- [Objetivo del trabajo](#objetivo-del-trabajo)
 	- [Nombre de los alumnos participantes](#nombre-de-los-alumnos-participantes)
-	- [Breve descripción del dataset (se puede adjuntar el archivo PDF)](#breve-descripción-del-dataset-se-puede-adjuntar-el-archivo-pdf)
+	- [Breve descripción del dataset](#breve-descripción-del-dataset)
 		- [`movies_metadata.csv`](#movies_metadatacsv)
 		- [`ratings.csv`](#ratingscsv)
 		- [`keywords.csv`](#keywordscsv)
@@ -20,7 +20,8 @@
 - André Dario Pilco Chiuyare
 - Luis Felipe Poma Astete
   
-## Breve descripción del dataset (se puede adjuntar el archivo PDF)
+## Breve descripción del dataset
+Los datasets no se pudieron subir al repositorio debido al tamaño limite excedido, por lo cual al ejecutar el notebook se descargara desde Kaggle automaticamente.
 
 ### `movies_metadata.csv`
 | Columna               | Descripción                                                                       |
