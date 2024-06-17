@@ -9,7 +9,6 @@ app = Flask(__name__)
 DF = pd.DataFrame()
 IDS = pd.DataFrame()
 
-API_KEY = "bac570bf6b8b0f66d91608b71fc3d305"
 
 # Render a Home
 @app.route("/")
