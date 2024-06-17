@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+	<title>Document</title>
+</head>
+
+<body>
+	<header>
+		<div class="logo">MovieApp</div>
+	</header>
+	<main>
+		<section id="movies_popular">
+			<div class="list-movies">
+				{% for movie in movies %}
+				<div class="card">
+					<img src="{{movie.image}}" alt="{{ movie.title }}">
+					<article>
+						<p>{{ movie.title }}</p>
+						<p>{{ movie.release_date }}</p>
+					</article>
+				</div>
+				{% endfor %}
+			</div>
+		</section>
+		<section id="movies_">
+			<div class="list-movies">
+				{% for movie in movies %}
+				<div class="card">
+					<img src="{{movie.image}}" alt="{{ movie.title }}">
+					<article>
+						<p>{{ movie.title }}</p>
+						<p>{{ movie.release_date }}</p>
+					</article>
+				</div>
+				{% endfor %}
+			</div>
+		</section>
+
+	</main>
+
+</body>
+
+</html>
