@@ -163,3 +163,5 @@ data/
 # Not Ignore data_clean.csv file
 src/model/data_clean/*
 !src/model/data_clean/data_clean.csv
+!src/model/data_clean/data_clean.json
+!src/model/data_clean/id.json
