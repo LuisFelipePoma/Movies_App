@@ -161,6 +161,8 @@ cython_debug/
 
 data/
 # Not Ignore data_clean.csv file
+*.npy
+*.faiss
 src/model/data_clean/*
 !src/model/data_clean/data_clean.csv
 !src/model/data_clean/data_clean.json
