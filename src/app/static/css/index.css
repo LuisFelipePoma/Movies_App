@@ -24,10 +24,40 @@ main {
 	/* center content */
 	display: grid;
 	place-content: center;
+	/* Two sections 2fr 8fr */
+	grid-template-columns: 3fr 7fr;
+	padding: 20px;
+}
+.section-movie{
+	width: 1000px;
+
 }
 
-section {
-	margin: 20px;
+.movies_header{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	& button{
+		height: fit-content;
+		width: fit-content;
+		border: none;
+		background-color: transparent;
+		svg{
+			cursor: pointer;
+		}
+	}
+}
+
+/* Loading Icon */
+#loading-icon {
+	display: none;
+	width: 50px;
+	height: 50px;
+	margin: 0;
+	border: 5px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 5px solid #3498db;
+	animation: spin 1s linear infinite;
 }
 
 .list-movies {
@@ -35,7 +65,8 @@ section {
 	flex-direction: row;
 	gap: 20px;
 	overflow-x: auto;
-	max-width: 60dvw;
+	scrollbar-color: transparent transparent;
+	scroll-behavior: smooth;
 }
 
 .card {
@@ -76,4 +107,11 @@ section {
 			}
 		}
 	}
+}
+
+
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
 }

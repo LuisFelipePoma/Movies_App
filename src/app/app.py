@@ -1,32 +1,30 @@
-
-from flask import Flask, render_template
-import pandas as pd
-
-#Models
-from models.movie import Movie
+from flask import Flask, jsonify, render_template
+from services.movie import Movie
 
 app = Flask(__name__)
-DF = pd.DataFrame()
-IDS = pd.DataFrame()
-
 
 # Render a Home
 @app.route("/")
 def template():
-    movies = get_movies_ids(20)
-    movies = Movie.get_movie_card(movies)
+    movies = movie.get_movies_list(n=10)
     return render_template("index.html", movies=movies)
 
-# ---------------- DATA ---------------------
+
+# ---------------- APIS ---------------------
+@app.route("/api/movies")
+def get_movies():
+    movies = movie.get_movies_list(n=10)
+    return jsonify(movies)
 
 
+# Api for filter
+@app.route("/api/movies/filter")
+def get_movies_filter():
+    movies = movie.get_movies_filter(n=10)
+    return jsonify(movies)
 
-def get_movies_ids(n: int) -> list[int]:
-    # return a list of ids random
-    return IDS.sample(n)[0]
 
 # ---------------- MAIN ---------------------
 if __name__ == "__main__":
-    IDS = pd.read_json("../model/data_clean/id.json")
-    DF = pd.read_json("../model/data_clean/data_clean.json")
+    movie = Movie()
     app.run(host="0.0.0.0", port=5000, debug=True)
