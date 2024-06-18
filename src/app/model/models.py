@@ -1,14 +1,20 @@
 import tensorflow as tf
 import pandas as pd
 import numpy as np
+import faiss
 
 
 class RepositoryMovies:
     def __init__(self):
-        self.repository = pd.read_json("../model/data_clean/id.json", orient="records")
+        self.repository = pd.read_json(
+            "../model/data_clean/data_clean.json", orient="records"
+        )
 
     def get_movies_sample(self, n: int):
-        return self.repository[0].sample(n).to_list()
+        return self.repository["id"].sample(n).to_list()
+
+    def get_movie_by_title(self, title):
+        return self.repository[self.repository["title"] == title].index[0]
 
 
 class RecomenderCollaborativeBased:
@@ -41,7 +47,32 @@ class RecomenderCollaborativeBased:
         return top_movie_ids[:n]
 
 
-# class RecomenderContentBased:
-# def __init__(self):
-# ---------------- Variables ---------------------
-# self.model = tf.keras.models.load_model("../model/model.h5")
+class RecomenderContentBased:
+    def __init__(self):
+        # ---------------- Variables ---------------------
+        # Cargar embeddings y el índice FAISS
+        self.embeddings = np.load("../model/assets/embeddings.npy")
+        self.index = faiss.read_index("../model/assets/embedding_index.faiss")
+        self.repository = RepositoryMovies()
+
+    def get_recommendation_faiss(self, title: list, k=10):
+        idx = self.repository.get_movie_by_title(title)
+        D, I = self.index.search(self.embeddings[idx : idx + 1], k)
+        movie_indices = I[0][1:]
+        return movie_indices
+    
+    def get_recommendations_faiss(self,titles, k=10):
+    # Obtener los índices de las películas que coinciden con los títulos
+        indices = [self.repository.get_movie_by_title(title) for title in titles]
+        
+        # Obtener los embeddings promedio de las películas
+        avg_embedding = np.mean(self.embeddings[indices], axis=0, keepdims=True)
+        
+        # Buscar los k vecinos más cercanos al embedding promedio
+        D, I = self.index.search(avg_embedding, k)
+        
+        # I[0][1:] contiene los índices de las películas más similares (excluyendo las ingresadas)
+        movie_indices = I[0][1:]
+        
+        # Devolver los títulos de las películas recomendadas
+        return movie_indices

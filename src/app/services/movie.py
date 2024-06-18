@@ -1,4 +1,4 @@
-from model.models import RecomenderCollaborativeBased
+from model.models import RecomenderCollaborativeBased, RecomenderContentBased
 from services.cache_movies import CacheMovies
 import requests
 import pandas as pd
@@ -14,6 +14,7 @@ class Movie:
         self.repository = pd.read_json("../model/data_clean/data_clean.json")
         # Read Model
         self.modelCF = RecomenderCollaborativeBased()
+        self.modelCB = RecomenderContentBased()
 
     # ---------------- Main Methods ---------------------
     def get_movies_list(self, n: int):
@@ -54,7 +55,19 @@ class Movie:
             )
         )
 
-    def recomend_CB(self, movies: list, n: int): ...
+    def recomend_CB(self, movies: list, n: int):
+        movies = self.get_movies(self.modelCB.get_recommendations_faiss(movies, n))
+        return list(
+            map(
+                lambda movie: {
+                    "id": movie["id"],
+                    "title": movie["title"],
+                    "release_date": self.parse_date(movie["release_date"]),
+                    "image": f"https://image.tmdb.org/t/p/w500{movie['poster_path']}",
+                },
+                movies,
+            )
+        )
 
     def recomend_FC(self, user: int, n: int):
         movies = self.get_movies(self.modelCF.predict(user, n))

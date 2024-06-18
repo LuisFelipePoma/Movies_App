@@ -1,6 +1,7 @@
 from services.movie import Movie
 from flask import Flask, jsonify, render_template, request
 
+movie = Movie()
 app = Flask(__name__)
 
 
@@ -40,8 +41,6 @@ def get_movies_recomend():
     movies = movie.recomend_CB(movies=data, n=10)
     return jsonify(movies)
 
-
 # ---------------- MAIN ---------------------
 if __name__ == "__main__":
-    movie = Movie()
     app.run(host="0.0.0.0", port=5000, debug=True)
