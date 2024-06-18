@@ -26,22 +26,43 @@ nav {
 main {
 	/* center content */
 	display: grid;
-	place-content: center;
+	/* place-content: center; */
 	/* Two sections 2fr 8fr */
 	grid-template-columns: 3fr 7fr;
 	padding: 20px;
+
+	&>div {
+		display: flex;
+		flex-direction: column;
+	}
+}
+
+/* ---------------------------- STYLES */
+
+.selected {
+	background-color: #8bd89b;
+}
+
+.sections {
+	display: flex;
+	flex-direction: column;
+	& > section {
+		width: 900px;
+	}
+}
+
+/* ---------------------------- SECTION MOVIES SELECTED */
+#movies-recomendations{
+	display: none;
 }
 
 /* ---------------------------- SECTION MOVIES POPULAR */
-#movies_popular {
-	width: 1000px;
-
-}
 
 .movies_header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	width: inherit;
 
 	& button {
 		height: fit-content;
@@ -68,21 +89,24 @@ main {
 }
 
 .list-movies {
-	display: flex;
-	flex-direction: row;
+	display: grid;
+	grid-gap: 1rem;
+	grid-auto-flow: column;
+	grid-auto-columns: 175px;
+	
 	gap: 20px;
 	overflow-x: auto;
 	scrollbar-color: transparent transparent;
 	scroll-behavior: smooth;
+	width: 900px;
 }
 
 .card {
 	padding: 10px;
-	/* width: 300px; */
 	height: 350px;
 	display: grid;
 	grid-template-rows: 1fr 1fr;
-
+	place-content: center;
 	img {
 		/* resize with aspect ratio */
 		width: 150px;
@@ -194,13 +218,19 @@ main {
 
 	.mini-card {
 		&:hover {
-			color: #1f1f1f;
+			background-color: #b35555;
+
+			p {
+				color: #f1f1f1;
+			}
 		}
 	}
 }
 
 
-
+#btn-recomend {
+	width: 300px;
+}
 
 /* ---------------------------- ANIMATIONS */
 @keyframes spin {

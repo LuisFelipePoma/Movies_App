@@ -15,13 +15,13 @@ class CacheMovies:
 
     def _read_cache(self):
         try:
-            with open("./model/cache.json", "r") as file:
+            with open("./services/cache.json", "r") as file:
                 return json.load(file)
         except FileNotFoundError:
             return {}
 
     def _save_cache(self):
-        with open("./model/cache.json", "w") as file:
+        with open("./services/cache.json", "w") as file:
             json.dump(self.cache, file)
 
     def save_cache_periodically(self, interval=60):

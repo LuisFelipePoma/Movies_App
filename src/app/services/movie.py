@@ -50,7 +50,10 @@ class Movie:
                 new_movies,
             )
         )
-
+        
+    def get_movies_recomended(self, movies:list, n:int):
+        ...
+    
     # ---------------- Utils Methods ---------------------
 
     def get_random_movies(self, n: int):

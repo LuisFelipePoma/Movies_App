@@ -2,12 +2,13 @@
 const $ = element => document.querySelector(element)
 // <------------------------------ Agregar peliculas a la seleccion ------------------------------>
 const movies_selected = []
-const $cards = document.querySelectorAll('.card')
+let $cards = document.querySelectorAll('.card')
+let $minicards = document.querySelectorAll('.mini-card')
+const $btnRecomendations = $('#btn-recomend')
 
 // create funcion event onclik
 function addMovie (e) {
   const $movie = e.currentTarget
-
   // Get the movie card
   const p = $movie.querySelectorAll('p')
   const movie = {
@@ -19,21 +20,30 @@ function addMovie (e) {
 
   // Verify movie with id doesnt exist
   if (movies_selected.find(m => m.id === movie.id)) return
+  // Add style
+  $movie.classList.add('selected')
   movies_selected.push(movie)
-  console.log(movies_selected)
   updateSelectedMovies()
 }
-
-// Add event OnClick
-$cards.forEach(card => {
-  card.addEventListener('click', addMovie)
-})
 
 function removeMovie (e) {
   const $movie = e.currentTarget
   const id = $movie.id
   const index = movies_selected.findIndex(m => m.id === id)
   movies_selected.splice(index, 1)
+  //remove style
+  $cards.forEach(card => {
+    if (card.id === id) {
+      card.classList.remove('selected')
+    }
+  })
+  // remove style
+  $minicards.forEach(minicard => {
+    if (minicard.id === id) {
+      minicard.classList.remove('selected')
+    }
+  })
+
   updateSelectedMovies()
 }
 
@@ -62,7 +72,61 @@ function updateSelectedMovies () {
   })
 }
 
+// Add event OnClick
+$cards.forEach(card => {
+  card.addEventListener('click', addMovie)
+})
 
+// <------------------------------ Recomendar peliculas de la seleccion ------------------------------>
+const $sectionRecomendations = $('#movies-recomendations')
+const $sectionRecomendationsList = $('#movies-recomendations .list-movies')
+function sendMoviesToRecomend () {
+  if (movies_selected.length === 0) return
+	$sectionRecomendations.style.display = 'block'
+  fetch('/api/movies/recomend', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(movies_selected)
+  })
+    .then(response => response.json())
+    .then(movies => {
+      // console.log(movies)
+      $sectionRecomendationsList.innerHTML = ''
+      movies.forEach(movie => {
+        const movieCard = document.importNode($movieTemplate, true)
+        // Añadimos el id
+        movieCard.querySelector('.card').id = movie.id
+
+        // Añadimos la imagen
+        const movieImage = movieCard.querySelector('img')
+        movieImage.src = movie.image
+        movieImage.alt = movie.title
+
+        // Añadimos el titulo
+        const movieTitle = movieCard.querySelector('.title')
+        movieTitle.textContent = movie.title
+
+        // Añadimos la fecha
+        const movieDate = movieCard.querySelector('.release-date')
+        movieDate.textContent = movie.release_date
+
+        // Add event OnClick
+
+        movieCard.querySelector('.card').addEventListener('click', e => {
+          $cards = document.querySelectorAll('.card')
+          addMovie(e)
+        })
+        $sectionRecomendationsList.appendChild(movieCard)
+      })
+    })
+    .catch(error => {
+      console.error('Error fetching movies:', error)
+    })
+}
+
+$btnRecomendations.addEventListener('click', sendMoviesToRecomend)
 
 // <------------------------------ Cambiar el comportamiento del scroll en las listas ------------------------------>
 const $listMovies = document.querySelectorAll('.list-movies')
@@ -139,7 +203,8 @@ $formsFilter.addEventListener('submit', evt => {
   evt.preventDefault()
   const formData = new FormData($formsFilter)
   const query = formData.get('query')
-  const url = `/api/movies/filter?query=${query}`
+  // transform qery to url variable
+  const url = `/api/movies/filter?query=${encodeURIComponent(query)}`
   fetch(url)
     .then(response => response.json())
     .then(movies => {
@@ -147,7 +212,6 @@ $formsFilter.addEventListener('submit', evt => {
       if (movies.length === 0) {
         $sectionFilter.innerHTML = 'Not found movies :('
       }
-      console.log(movies)
       movies.forEach(movie => {
         const movieCard = document.importNode($filterCardTemplate, true)
         // Añadimos el id
@@ -167,6 +231,7 @@ $formsFilter.addEventListener('submit', evt => {
           .querySelector('.mini-card')
           .addEventListener('click', addMovie)
         $sectionFilter.appendChild(movieCard)
+        $minicards = document.querySelectorAll('.mini-card')
       })
     })
     .catch(error => {

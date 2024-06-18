@@ -3,6 +3,7 @@ from services.movie import Movie
 
 app = Flask(__name__)
 
+
 # Render a Home
 @app.route("/")
 def template():
@@ -21,10 +22,24 @@ def get_movies():
 @app.route("/api/movies/filter")
 def get_movies_filter():
     # Obtener el parámetro de consulta 'query' (con un valor predeterminado si no se proporciona)
-    query = request.args.get('query', default='', type=str)
+    query = request.args.get("query", default="", type=str)
     # Suponiendo que 'movie.get_movies_filter' acepta un parámetro 'query'
     movies = movie.get_movies_filter(query=query, n=10)
     return jsonify(movies)
+
+
+@app.route("/api/movies/recomend", methods=["POST"])
+def get_movies_recomend():
+    # Obtener el cuerpo de la solicitud como JSON
+    data = request.json
+    print(data)
+    if(data is None):
+        return jsonify({"error": "Invalid data"})
+    # Suponiendo que 'movie.get_movies_recomended' acepta un parámetro 'movies' y 'n'
+    # movies = movie.get_movies_recomended(movies=data, n=10)
+    # return jsonify(movies)
+    return data
+    
 
 
 # ---------------- MAIN ---------------------
