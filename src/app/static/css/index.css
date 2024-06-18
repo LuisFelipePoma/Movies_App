@@ -18,7 +18,10 @@ header .logo {
 	margin: 0;
 }
 
-/* Section styles */
+nav {
+	display: grid;
+	gap: 10px;
+}
 
 main {
 	/* center content */
@@ -28,21 +31,25 @@ main {
 	grid-template-columns: 3fr 7fr;
 	padding: 20px;
 }
-.section-movie{
+
+/* ---------------------------- SECTION MOVIES POPULAR */
+#movies_popular {
 	width: 1000px;
 
 }
 
-.movies_header{
+.movies_header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	& button{
+
+	& button {
 		height: fit-content;
 		width: fit-content;
 		border: none;
 		background-color: transparent;
-		svg{
+
+		svg {
 			cursor: pointer;
 		}
 	}
@@ -91,27 +98,117 @@ main {
 		}
 	}
 
-	article{
+	article {
 		display: flex;
 		flex-direction: column;
 		margin-top: 1rem;
-		p{
+
+		p {
 			margin: 0;
 			line-height: 1.5;
-			&:first-child{
+
+			&:first-child {
 				font-weight: 900;
 			}
 
-			&:last-child{
+			&:last-child {
 				color: #666666;
 			}
 		}
 	}
 }
 
+/* ---------------------------- SECTION MOVIES FILTER */
+.list_sidebar {
+	border-radius: 10px;
+	padding-top: 20px;
+	width: 300px;
+	height: 450px;
+	overflow-y: auto;
+	scroll-behavior: smooth;
+	scrollbar-color: transparent transparent;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+/* #movies_filter {} */
+
+.mini-card {
+	cursor: pointer;
+	display: flex;
+	width: 225px;
+	gap: 1rem;
+	padding: 1rem;
+	align-items: center;
+	border-radius: 10px;
+
+	/* ANIMATIONS */
+	transition: background-color 0.3s ease-in-out;
+
+	img {
+		width: 50px;
+		height: 70px;
+		border-radius: 5px;
+		align-self: center;
+	}
+
+	article {
+		width: 200px;
+		max-height: 65px;
+
+		p {
+			width: 145px;
+			padding: 0;
+			margin: 0;
+			overflow: hidden;
+			position: relative;
+			text-decoration: none;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+
+			&:first-child {
+				font-weight: 800;
+			}
+
+			&:last-child {
+				color: #666666;
+			}
+		}
+	}
+
+	&:hover {
+		background-color: #d1d1d1;
+	}
+}
+
+/* ---------------------------- SECTION MOVIES SELECTED */
+
+#movies_selected {
+	background-color: #1f1f1f;
+	border-radius: 10px;
+	width: 300px;
+	height: 350px;
+	padding: 20px;
+	color: white;
+
+	.mini-card {
+		&:hover {
+			color: #1f1f1f;
+		}
+	}
+}
 
 
+
+
+/* ---------------------------- ANIMATIONS */
 @keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
 }

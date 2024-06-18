@@ -18,6 +18,7 @@ class Movie:
         return list(
             map(
                 lambda movie: {
+                    "id": movie["id"],
                     "title": movie["title"],
                     "release_date": self.parse_date(movie["release_date"]),
                     "image": f"https://image.tmdb.org/t/p/w500{movie['poster_path']}",
@@ -26,11 +27,22 @@ class Movie:
             )
         )
 
-    def get_movies_filter(self, n: int):
-        new_movies = self.get_movies(self.repository.query("'drama' in genres").sample(n))
+    def get_movies_filter(self, n: int, query: str):
+
+        new_movies = self.repository[
+            self.repository["genres"].str.contains(query, case=False)
+            | self.repository["title"].str.contains(query, case=False)
+        ].sort_values("popularity", ascending=False)["id"]
+
+        if new_movies.__len__() > n:
+            new_movies = new_movies[:n]
+
+        new_movies = self.get_movies(new_movies)
+
         return list(
             map(
                 lambda movie: {
+                    "id": movie["id"],
                     "title": movie["title"],
                     "release_date": self.parse_date(movie["release_date"]),
                     "image": f"https://image.tmdb.org/t/p/w500{movie['poster_path']}",

@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 from services.movie import Movie
 
 app = Flask(__name__)
@@ -20,7 +20,10 @@ def get_movies():
 # Api for filter
 @app.route("/api/movies/filter")
 def get_movies_filter():
-    movies = movie.get_movies_filter(n=10)
+    # Obtener el parámetro de consulta 'query' (con un valor predeterminado si no se proporciona)
+    query = request.args.get('query', default='', type=str)
+    # Suponiendo que 'movie.get_movies_filter' acepta un parámetro 'query'
+    movies = movie.get_movies_filter(query=query, n=10)
     return jsonify(movies)
 
 
