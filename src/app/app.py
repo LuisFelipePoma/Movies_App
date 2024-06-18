@@ -1,5 +1,5 @@
-from flask import Flask, jsonify, render_template, request
 from services.movie import Movie
+from flask import Flask, jsonify, render_template, request
 
 app = Flask(__name__)
 
@@ -7,9 +7,11 @@ app = Flask(__name__)
 # Render a Home
 @app.route("/")
 def template():
-    movies = movie.get_movies_list(n=10)
-    return render_template("index.html", movies=movies)
-
+    popular_movies = movie.get_movies_list(n=10)
+    foryou_movies = movie.recomend_FC(user=1, n=10)
+    return render_template(
+        "index.html", popular_movies=popular_movies, foryou_movies=foryou_movies
+    )
 
 # ---------------- APIS ---------------------
 @app.route("/api/movies")
@@ -32,14 +34,11 @@ def get_movies_filter():
 def get_movies_recomend():
     # Obtener el cuerpo de la solicitud como JSON
     data = request.json
-    print(data)
-    if(data is None):
+    if data is None:
         return jsonify({"error": "Invalid data"})
     # Suponiendo que 'movie.get_movies_recomended' acepta un parámetro 'movies' y 'n'
-    # movies = movie.get_movies_recomended(movies=data, n=10)
-    # return jsonify(movies)
-    return data
-    
+    movies = movie.recomend_CB(movies=data, n=10)
+    return jsonify(movies)
 
 
 # ---------------- MAIN ---------------------

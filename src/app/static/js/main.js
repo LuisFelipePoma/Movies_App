@@ -82,7 +82,6 @@ const $sectionRecomendations = $('#movies-recomendations')
 const $sectionRecomendationsList = $('#movies-recomendations .list-movies')
 function sendMoviesToRecomend () {
   if (movies_selected.length === 0) return
-	$sectionRecomendations.style.display = 'block'
   fetch('/api/movies/recomend', {
     method: 'POST',
     headers: {
@@ -119,6 +118,7 @@ function sendMoviesToRecomend () {
           addMovie(e)
         })
         $sectionRecomendationsList.appendChild(movieCard)
+        $sectionRecomendations.style.display = 'block'
       })
     })
     .catch(error => {
@@ -128,18 +128,16 @@ function sendMoviesToRecomend () {
 
 $btnRecomendations.addEventListener('click', sendMoviesToRecomend)
 
-// <------------------------------ Cambiar el comportamiento del scroll en las listas ------------------------------>
-const $listMovies = document.querySelectorAll('.list-movies')
-// Apply scroll behav
-$listMovies.forEach(list => {
-  list.addEventListener('wheel', evt => {
-    evt.preventDefault() // Evita el desplazamiento vertical por defecto
-    list.scrollBy({
-      left: evt.deltaY * 2.5, // Ajusta la velocidad del desplazamiento
-      behavior: 'smooth' // Desplazamiento suave
-    })
-  })
-})
+// <------------------------------ Actualizar el contenido de las peliculas Para ti ------------------------------>
+const $moviesForYouList = $('#movies-for-you .list-movies')
+const $movieForYouTemplate = $('#movie-template').content
+const $userId = $('#user-id').textContent
+
+function updateForYou(){
+	fetch('/api/movies/for-you')
+	.then(response => response.json())
+
+}
 
 // <------------------------------ Actualizar el contenido de las peliculas populares ------------------------------>
 const $refreshButton = $('#refresh-button')
@@ -237,4 +235,19 @@ $formsFilter.addEventListener('submit', evt => {
     .catch(error => {
       console.error('Error fetching movies:', error)
     })
+})
+
+
+
+// <------------------------------ Cambiar el comportamiento del scroll en las listas ------------------------------>
+const $listMovies = document.querySelectorAll('.list-movies')
+// Apply scroll behav
+$listMovies.forEach(list => {
+  list.addEventListener('wheel', evt => {
+    evt.preventDefault() // Evita el desplazamiento vertical por defecto
+    list.scrollBy({
+      left: evt.deltaY * 2.5, // Ajusta la velocidad del desplazamiento
+      behavior: 'smooth' // Desplazamiento suave
+    })
+  })
 })

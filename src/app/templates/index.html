@@ -41,19 +41,37 @@
 		</nav>
 		<!-- SECTION YOUR SELECTIONS -->
 		<div class="sections">
-			<section id="movies-recomendations"">
+			<section id="movies-recomendations">
 				<div class="movies_header">
-						<h3>Peliculas Recomendadas</h3>
+					<h3>Recomended Movies</h3>
 				</div>
 				<div class="list-movies"></div>
 			</section>
-			<!-- SECTION MOVIES -->
-			<section id=" movies_popular">
+			<!-- SECTION MOVIES FOR YOU-->
+			<section id="movies-for-you">
 				<div class="movies_header">
-					<h3>Peliculas Populares</h3>
+					<h3>For you</h3>
+				</div>
+				<div class="list-movies">
+					{% for movie in foryou_movies %}
+					<div class="card" id="{{movie.id}}">
+						<img src="{{movie.image}}" alt="{{ movie.title }}" />
+						<article>
+							<p>{{ movie.title }}</p>
+							<p>{{ movie.release_date }}</p>
+						</article>
+					</div>
+					{% endfor %}
+				</div>
+			</section>
+			<!-- SECTION MOVIES POPULAR -->
+			<section id="movies_popular">
+				<div class="movies_header">
+					<h3>Popular Movies</h3>
 					<button id="refresh-button">
 						<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"
-							stroke-width="1.5" stroke="#333333" fill="none" stroke-linecap="round" stroke-linejoin="round">
+							stroke-width="1.5" stroke="#333333" fill="none" stroke-linecap="round"
+							stroke-linejoin="round">
 							<path stroke="none" d="M0 0h24v24H0z" fill="none" />
 							<path
 								d="M10.09 4.01l.496 -.495a2 2 0 0 1 2.828 0l7.071 7.07a2 2 0 0 1 0 2.83l-7.07 7.07a2 2 0 0 1 -2.83 0l-7.07 -7.07a2 2 0 0 1 0 -2.83l3.535 -3.535h-3.988" />
@@ -63,7 +81,7 @@
 					<div id="loading-icon"></div>
 				</div>
 				<div class="list-movies">
-					{% for movie in movies %}
+					{% for movie in popular_movies %}
 					<div class="card" id="{{movie.id}}">
 						<img src="{{movie.image}}" alt="{{ movie.title }}" />
 						<article>
