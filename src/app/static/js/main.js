@@ -87,6 +87,7 @@ const $sectionRecomendationsList = $('#movies-recomendations .list-movies')
 
 function sendMoviesToRecomend () {
   if (movies_selected.length === 0) return
+	console.log(movies_selected)
   fetch('/api/movies/recomend', {
     method: 'POST',
     headers: {

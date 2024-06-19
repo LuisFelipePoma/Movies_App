@@ -67,7 +67,6 @@ class RecomenderContentBased:
 
         # Obtener los embeddings promedio de las películas
         avg_embedding = np.mean(self.embeddings[indices], axis=0, keepdims=True)
-        print(avg_embedding)
         # Buscar los k vecinos más cercanos al embedding promedio
         D, I = self.index.search(avg_embedding, k)
 

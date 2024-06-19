@@ -1,6 +1,7 @@
 from services.movie import Movie
 from flask import Flask, jsonify, render_template, request
-
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 app = Flask(__name__)
 
 
@@ -37,7 +38,7 @@ def get_movies_recomend():
     data = request.get_json()
     if data is None:
         return jsonify({"error": "Invalid data"})
-    # Suponiendo que 'movie.get_movies_recomended' acepta un parámetro 'movies' y 'n'
+        # Suponiendo que 'movie.get_movies_recomended' acepta un parámetro 'movies' y 'n'
     movies = movie.recomend_CB(movies=data, n=10)
     return jsonify(movies)
 
