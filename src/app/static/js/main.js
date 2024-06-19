@@ -1,8 +1,7 @@
 // <------------------------------ Variables globales ------------------------------>
 const $ = element => document.querySelector(element)
-const $cardMovieTemplate = $('#movie-template').content
-const $filterCardTemplate = $('#movies-card-filter-template').content
-
+const $cardMovieTemplate = $('#movie-card-template').content
+const $miniCardMovieTemplate = $('#movies-mini-card-template').content
 
 // <------------------------------ Agregar peliculas a la seleccion ------------------------------>
 const movies_selected = []
@@ -52,10 +51,10 @@ function removeMovie (e) {
 }
 
 function updateSelectedMovies () {
-  const $selectedMovies = $('#movies_selected')
+  const $selectedMovies = $('#movies-selected')
   $selectedMovies.innerHTML = ''
   movies_selected.forEach(movie => {
-    const movieCard = document.importNode($filterCardTemplate, true)
+    const movieCard = document.importNode($miniCardMovieTemplate, true)
     // Añadimos el id
     movieCard.querySelector('.mini-card').id = movie.id
     // Añadimos la imagen
@@ -76,7 +75,7 @@ function updateSelectedMovies () {
   })
 }
 
-// Add event OnClick
+// ADD EVENTS EVENTS
 $cards.forEach(card => {
   card.addEventListener('click', addMovie)
 })
@@ -87,7 +86,7 @@ const $sectionRecomendationsList = $('#movies-recomendations .list-movies')
 
 function sendMoviesToRecomend () {
   if (movies_selected.length === 0) return
-	console.log(movies_selected)
+  console.log(movies_selected)
   fetch('/api/movies/recomend', {
     method: 'POST',
     headers: {
@@ -131,27 +130,61 @@ function sendMoviesToRecomend () {
     })
 }
 
+// ADD EVENTS EVENTS
 $btnRecomendations.addEventListener('click', sendMoviesToRecomend)
 
 // <------------------------------ Actualizar el contenido de las peliculas Para ti ------------------------------>
 const $moviesForYouList = $('#movies-for-you .list-movies')
-const $movieForYouTemplate = $('#movie-template').content
-// const $userId = $('#user-id').textContent
+const $userIdInput = $('#user-id')
+const $btnRefreshForYou = $('#btn-refresh-for-you')
+const $iconLoadingForYou = $('#icon-loading-for-you')
 
-function updateForYou(){
-	fetch('/api/movies/for-you')
-	.then(response => response.json())
-
+function updateForYou () {
+  $iconLoadingForYou.style.display = 'flex'
+  $btnRefreshForYou.style.display = 'none'
+  fetch('/api/movies/for-you')
+    .then(response => response.json())
+    .then(movies => {
+      $moviesForYouList.innerHTML = ''
+      movies.forEach(movie => {
+        const movieCard = document.importNode($cardMovieTemplate, true)
+        // Añadimos el id
+        movieCard.querySelector('.card').id = movie.id
+        // Añadimos la imagen
+        const movieImage = movieCard.querySelector('img')
+        movieImage.src = movie.image
+        movieImage.alt = movie.title
+        // Añadimos el titulo
+        const movieTitle = movieCard.querySelector('.title')
+        movieTitle.textContent = movie.title
+        // Añadimos la fecha
+        const movieDate = movieCard.querySelector('.release-date')
+        movieDate.textContent = movie.release_date
+        // Add event OnClick
+        movieCard.querySelector('.card').addEventListener('click', addMovie)
+        $moviesForYouList.appendChild(movieCard)
+      })
+      $iconLoadingForYou.style.display = 'none'
+      $btnRefreshForYou.style.display = 'block'
+    })
+    .catch(error => {
+      console.error('Error fetching movies:', error)
+      $iconLoadingForYou.style.display = 'none'
+    })
 }
 
-// <------------------------------ Actualizar el contenido de las peliculas populares ------------------------------>
-const $refreshButton = $('#refresh-button')
-const $loadingIcon = $('#loading-icon')
-const $moviesPopularList = $('#movies_popular .list-movies')
+// ADD EVENTS EVENTS
+$userIdInput.addEventListener('change', updateForYou)
+$btnRefreshForYou.addEventListener('click', updateForYou)
 
-$refreshButton.addEventListener('click', () => {
+// <------------------------------ Actualizar el contenido de las peliculas populares ------------------------------>
+const $refreshButton = $('#btn-refresh-popular')
+const $iconLoadingPopular = $('#icon-loading-popular')
+const $moviesPopularList = $('#movies-popular .list-movies')
+
+function updatePopular () {
   // Mostrar el icono de cargando
-  $loadingIcon.style.display = 'flex'
+  $iconLoadingPopular.style.display = 'flex'
   $refreshButton.style.display = 'none'
   fetch('/api/movies')
     .then(response => response.json())
@@ -182,25 +215,29 @@ $refreshButton.addEventListener('click', () => {
         // Add event OnClick
         movieCard.querySelector('.card').addEventListener('click', addMovie)
 
+        // Agregar la película al listado
         $moviesPopularList.appendChild(movieCard)
       })
 
       // Ocultar el icono de cargando
-      $loadingIcon.style.display = 'none'
+      $iconLoadingPopular.style.display = 'none'
       $refreshButton.style.display = 'block'
     })
     .catch(error => {
       console.error('Error fetching movies:', error)
       // Ocultar el icono de cargando en caso de error
-      $loadingIcon.style.display = 'none'
+      $iconLoadingPopular.style.display = 'none'
     })
-})
+}
+
+// ADD EVENTS EVENTS
+$refreshButton.addEventListener('click', updatePopular)
 
 // <------------------------------ Manejar el filtrado de peliculas ------------------------------>
 const $formsFilter = $('#filter')
-const $sectionFilter = $('#movies_filter')
+const $sectionFilter = $('#movies-filter')
 
-$formsFilter.addEventListener('submit', evt => {
+function fetchMoviesFilter (evt) {
   evt.preventDefault()
   const formData = new FormData($formsFilter)
   const query = formData.get('query')
@@ -214,7 +251,7 @@ $formsFilter.addEventListener('submit', evt => {
         $sectionFilter.innerHTML = 'Not found movies :('
       }
       movies.forEach(movie => {
-        const movieCard = document.importNode($filterCardTemplate, true)
+        const movieCard = document.importNode($miniCardMovieTemplate, true)
         // Añadimos el id
         movieCard.querySelector('.mini-card').id = movie.id
         // Añadimos la imagen
@@ -238,19 +275,20 @@ $formsFilter.addEventListener('submit', evt => {
     .catch(error => {
       console.error('Error fetching movies:', error)
     })
-})
+}
 
+// ADD EVENTS EVENTS
+$formsFilter.addEventListener('submit', fetchMoviesFilter)
 
-
-// <------------------------------ Cambiar el comportamiento del scroll en las listas ------------------------------>
+// <------------------------------ CHANGE BEHAVIOUR SCROLL ------------------------------>
 const $listMovies = document.querySelectorAll('.list-movies')
 // Apply scroll behav
 $listMovies.forEach(list => {
   list.addEventListener('wheel', evt => {
-    evt.preventDefault() // Evita el desplazamiento vertical por defecto
+    evt.preventDefault() // Avoid vertical scroll
     list.scrollBy({
-      left: evt.deltaY * 2.5, // Ajusta la velocidad del desplazamiento
-      behavior: 'smooth' // Desplazamiento suave
+      left: evt.deltaY * 2.5, // Adjust velocity
+      behavior: 'smooth'
     })
   })
 })

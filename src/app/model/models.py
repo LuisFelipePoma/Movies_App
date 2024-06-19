@@ -16,6 +16,9 @@ class RepositoryMovies:
     def get_movie_by_title(self, title):
         return self.repository[self.repository["title"] == title].index[0]
 
+    def get_movie_by_id(self, id):
+        return self.repository[self.repository["id"] == id].index[0]
+
     def get_index_by_indices(self, indices):
         return self.repository.iloc[indices]["id"]
 
@@ -36,7 +39,7 @@ class RecomenderCollaborativeBased:
         user_ids = np.full(len(movie_ids), user_id)
 
         # Hacer predicciones
-        predicted_ratings = self.model.predict([user_ids, movie_ids])
+        predicted_ratings = self.model.predict([user_ids, movie_ids])  # type: ignore
 
         # Seleccionar las mejores recomendaciones
         top_indices = np.argsort(predicted_ratings[:, 0])[::-1]
@@ -53,16 +56,19 @@ class RecomenderContentBased:
         self.index = faiss.read_index("../model/assets/embedding_index.faiss")
         self.repository = RepositoryMovies()
 
-    def get_recommendations_str(self, title: dict, k=10):
-        idx = self.repository.get_movie_by_title(title["title"])
+    def get_recommendations_str(self, movie: dict, k=10):
+        # idx = self.repository.get_movie_by_title(title["title"])
+        idx = self.repository.get_movie_by_id(int(movie["id"]))
         D, I = self.index.search(self.embeddings[idx : idx + 1], k)
         movie_indices = I[0][1:]
         return self.repository.get_index_by_indices(movie_indices)
 
-    def get_recommendations_list(self, titles: list[dict], k=10):
+    def get_recommendations_list(self, movies: list[dict], k=10):
         # Obtener los índices de las películas que coinciden con los títulos
         indices = [
-            self.repository.get_movie_by_title(title["title"]) for title in titles
+            # self.repository.get_movie_by_title(title["title"]) for title in titles
+            self.repository.get_movie_by_id(int(movie["id"]))
+            for movie in movies
         ]
 
         # Obtener los embeddings promedio de las películas

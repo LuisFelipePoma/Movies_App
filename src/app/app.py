@@ -42,6 +42,13 @@ def get_movies_recomend():
     movies = movie.recomend_CB(movies=data, n=10)
     return jsonify(movies)
 
+@app.route("/api/movies/for-you")
+def get_movies_for_you():
+    # Obtener el parámetro de consulta 'user' (con un valor predeterminado si no se proporciona)
+    user = request.args.get("user", default=1, type=int)
+    # Suponiendo que 'movie.get_movies_for_you' acepta un parámetro 'user' y 'n'
+    movies = movie.recomend_FC(user=user, n=10)
+    return jsonify(movies)
 
 # ---------------- MAIN ---------------------
 if __name__ == "__main__":
