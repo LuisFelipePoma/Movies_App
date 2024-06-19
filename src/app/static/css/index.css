@@ -69,6 +69,7 @@ header {
 	color: white;
 	padding: 20px 0;
 	text-align: center;
+	background-image: url('../img/popcorn.png');
 }
 
 header .logo {
@@ -76,6 +77,11 @@ header .logo {
 	font-weight: bold;
 	margin: 0;
 	color: #8bd89b;
+	text-shadow: 
+                -1px -1px 0 black,  
+                 1px -1px 0 black,
+                -1px  1px 0 black,
+                 1px  1px 0 black;
 }
 
 .user-div {
