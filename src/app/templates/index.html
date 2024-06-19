@@ -1,123 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/index.css') }}"
+    />
+    <!-- link js -->
+    <script
+      src="{{ url_for('static', filename='js/main.js') }}"
+      type="module"
+    ></script>
+    <title>Document</title>
+  </head>
 
-<head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" />
-	<!-- link js -->
-	<script src="{{ url_for('static', filename='js/main.js') }}" type="module"></script>
-	<title>Document</title>
-</head>
+  <body>
+    <header>
+      <div class="logo">MovieApp</div>
+      <!-- select options for diferents user -->
+      <select name="user" id="user">
+        <option value="1">User 1</option>
+        <option value="2">User 2</option>
+        <option value="3">User 3</option>
+      </select>
+    </header>
+    <main>
+      <nav>
+        <!-- Form uses a function to fetch -->
+        <form id="filter">
+          <input type="text" name="query" placeholder="Search for a movie" />
+          <button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon icon-tabler icon-tabler-search"
+              width="25"
+              height="25"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="#333333"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <circle cx="10" cy="10" r="7" />
+              <line x1="21" y1="21" x2="15" y2="15" />
+            </svg>
+          </button>
+        </form>
+        <section id="movies_filter" class="list_sidebar"></section>
+        <section id="movies_selected" class="list_sidebar"></section>
+        <button id="btn-recomend">Recomend</button>
+      </nav>
+      <!-- SECTION YOUR SELECTIONS -->
+      <div class="sections">
+        <section id="movies-recomendations">
+          <div class="movies_header">
+            <h3>Recomended Movies</h3>
+          </div>
+          <div class="list-movies"></div>
+        </section>
+        <!-- SECTION MOVIES FOR YOU-->
+        <section id="movies-for-you">
+          <div class="movies_header">
+            <h3>For you</h3>
+          </div>
+          <div class="list-movies">
+            {% for movie in foryou_movies %}
+            <div class="card" id="{{movie.id}}">
+              <img src="{{movie.image}}" alt="{{ movie.title }}" />
+              <article>
+                <p>{{ movie.title }}</p>
+                <p>{{ movie.release_date }}</p>
+              </article>
+            </div>
+            {% endfor %}
+          </div>
+        </section>
+        <!-- SECTION MOVIES POPULAR -->
+        <section id="movies_popular">
+          <div class="movies_header">
+            <h3>Popular Movies</h3>
+            <button id="refresh-button">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="25"
+                height="25"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="#333333"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path
+                  d="M10.09 4.01l.496 -.495a2 2 0 0 1 2.828 0l7.071 7.07a2 2 0 0 1 0 2.83l-7.07 7.07a2 2 0 0 1 -2.83 0l-7.07 -7.07a2 2 0 0 1 0 -2.83l3.535 -3.535h-3.988"
+                />
+                <path d="M7.05 11.038v-3.988" />
+              </svg>
+            </button>
+            <div id="loading-icon"></div>
+          </div>
+          <div class="list-movies">
+            {% for movie in popular_movies %}
+            <div class="card" id="{{movie.id}}">
+              <img src="{{movie.image}}" alt="{{ movie.title }}" />
+              <article>
+                <p>{{ movie.title }}</p>
+                <p>{{ movie.release_date }}</p>
+              </article>
+            </div>
+            {% endfor %}
+          </div>
+        </section>
+      </div>
+    </main>
 
-<body>
-	<header>
-		<div class="logo">MovieApp</div>
-		<!-- select options for diferents user -->
-		<select name="user" id="user">
-			<option value="1">User 1</option>
-			<option value="2">User 2</option>
-			<option value="3">User 3</option>
-		</select>
-	</header>
-	<main>
-		<nav>
-			<!-- Form uses a function to fetch -->
-			<form id="filter">
-				<input type="text" name="query" placeholder="Search for a movie" />
-				<button id="search-button">
-					<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="25"
-						height="25" viewBox="0 0 24 24" stroke-width="1.5" stroke="#333333" fill="none"
-						stroke-linecap="round" stroke-linejoin="round">
-						<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-						<circle cx="10" cy="10" r="7" />
-						<line x1="21" y1="21" x2="15" y2="15" />
-					</svg>
-				</button>
-			</form>
-			<section id="movies_filter" class="list_sidebar"></section>
-			<section id="movies_selected" class="list_sidebar"></section>
-			<button id="btn-recomend">Recomend</button>
-		</nav>
-		<!-- SECTION YOUR SELECTIONS -->
-		<div class="sections">
-			<section id="movies-recomendations">
-				<div class="movies_header">
-					<h3>Recomended Movies</h3>
-				</div>
-				<div class="list-movies"></div>
-			</section>
-			<!-- SECTION MOVIES FOR YOU-->
-			<section id="movies-for-you">
-				<div class="movies_header">
-					<h3>For you</h3>
-				</div>
-				<div class="list-movies">
-					{% for movie in foryou_movies %}
-					<div class="card" id="{{movie.id}}">
-						<img src="{{movie.image}}" alt="{{ movie.title }}" />
-						<article>
-							<p>{{ movie.title }}</p>
-							<p>{{ movie.release_date }}</p>
-						</article>
-					</div>
-					{% endfor %}
-				</div>
-			</section>
-			<!-- SECTION MOVIES POPULAR -->
-			<section id="movies_popular">
-				<div class="movies_header">
-					<h3>Popular Movies</h3>
-					<button id="refresh-button">
-						<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"
-							stroke-width="1.5" stroke="#333333" fill="none" stroke-linecap="round"
-							stroke-linejoin="round">
-							<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-							<path
-								d="M10.09 4.01l.496 -.495a2 2 0 0 1 2.828 0l7.071 7.07a2 2 0 0 1 0 2.83l-7.07 7.07a2 2 0 0 1 -2.83 0l-7.07 -7.07a2 2 0 0 1 0 -2.83l3.535 -3.535h-3.988" />
-							<path d="M7.05 11.038v-3.988" />
-						</svg>
-					</button>
-					<div id="loading-icon"></div>
-				</div>
-				<div class="list-movies">
-					{% for movie in popular_movies %}
-					<div class="card" id="{{movie.id}}">
-						<img src="{{movie.image}}" alt="{{ movie.title }}" />
-						<article>
-							<p>{{ movie.title }}</p>
-							<p>{{ movie.release_date }}</p>
-						</article>
-					</div>
-					{% endfor %}
-				</div>
-			</section>
-		</div>
-	</main>
+    <!-- TEMPLATES -->
 
-	<!-- TEMPLATES -->
+    <!-- Template for movie cards -->
+    <template id="movie-template">
+      <div class="card">
+        <img src="" alt="" />
+        <article>
+          <p class="title"></p>
+          <p class="release-date"></p>
+        </article>
+      </div>
+    </template>
 
-	<!-- Template for movie cards -->
-	<template id="movie-template">
-		<div class="card">
-			<img src="" alt="" />
-			<article>
-				<p class="title"></p>
-				<p class="release-date"></p>
-			</article>
-		</div>
-	</template>
-
-	<!-- Template for movie filter cards in search -->
-	<template id="movies-card-filter-template">
-		<div class="mini-card">
-			<img src="" alt="" />
-			<article>
-				<p class="title"></p>
-				<p class="release-date"></p>
-			</article>
-		</div>
-	</template>
-</body>
-
+    <!-- Template for movie filter cards in search -->
+    <template id="movies-card-filter-template">
+      <div class="mini-card">
+        <img src="" alt="" />
+        <article>
+          <p class="title"></p>
+          <p class="release-date"></p>
+        </article>
+      </div>
+    </template>
+  </body>
 </html>

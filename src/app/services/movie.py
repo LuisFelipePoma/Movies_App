@@ -56,7 +56,12 @@ class Movie:
         )
 
     def recomend_CB(self, movies: list, n: int):
-        movies = self.get_movies(self.modelCB.get_recommendations_faiss(movies, n))
+        ids = (
+            self.modelCB.get_recommendations_list(movies, n)
+            if len(movies) != 1
+            else self.modelCB.get_recommendations_str(movies[0], n)
+        )
+        movies = self.get_movies(ids)
         return list(
             map(
                 lambda movie: {

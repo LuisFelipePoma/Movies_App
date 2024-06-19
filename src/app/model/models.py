@@ -16,6 +16,9 @@ class RepositoryMovies:
     def get_movie_by_title(self, title):
         return self.repository[self.repository["title"] == title].index[0]
 
+    def get_index_by_indices(self, indices):
+        return self.repository.iloc[indices]["id"]
+
 
 class RecomenderCollaborativeBased:
     def __init__(self):
@@ -39,11 +42,6 @@ class RecomenderCollaborativeBased:
         top_indices = np.argsort(predicted_ratings[:, 0])[::-1]
         top_movie_ids = movie_ids[top_indices]
 
-        print(
-            "Películas recomendadas para el usuario {}: {}".format(
-                user_id, top_movie_ids[:n]
-            )
-        )
         return top_movie_ids[:n]
 
 
@@ -55,24 +53,25 @@ class RecomenderContentBased:
         self.index = faiss.read_index("../model/assets/embedding_index.faiss")
         self.repository = RepositoryMovies()
 
-    def get_recommendation_faiss(self, title: list, k=10):
-        idx = self.repository.get_movie_by_title(title)
+    def get_recommendations_str(self, title: dict, k=10):
+        idx = self.repository.get_movie_by_title(title["title"])
         D, I = self.index.search(self.embeddings[idx : idx + 1], k)
         movie_indices = I[0][1:]
-        return movie_indices
-    
-    def get_recommendations_faiss(self,titles, k=10):
-    # Obtener los índices de las películas que coinciden con los títulos
-        indices = [self.repository.get_movie_by_title(title) for title in titles]
-        
+        return self.repository.get_index_by_indices(movie_indices)
+
+    def get_recommendations_list(self, titles: list[dict], k=10):
+        # Obtener los índices de las películas que coinciden con los títulos
+        indices = [
+            self.repository.get_movie_by_title(title["title"]) for title in titles
+        ]
+
         # Obtener los embeddings promedio de las películas
         avg_embedding = np.mean(self.embeddings[indices], axis=0, keepdims=True)
-        
+        print(avg_embedding)
         # Buscar los k vecinos más cercanos al embedding promedio
         D, I = self.index.search(avg_embedding, k)
-        
+
         # I[0][1:] contiene los índices de las películas más similares (excluyendo las ingresadas)
         movie_indices = I[0][1:]
-        
-        # Devolver los títulos de las películas recomendadas
-        return movie_indices
+
+        return self.repository.get_index_by_indices(movie_indices)

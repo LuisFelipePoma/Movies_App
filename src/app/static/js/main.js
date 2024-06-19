@@ -1,5 +1,9 @@
 // <------------------------------ Variables globales ------------------------------>
 const $ = element => document.querySelector(element)
+const $cardMovieTemplate = $('#movie-template').content
+const $filterCardTemplate = $('#movies-card-filter-template').content
+
+
 // <------------------------------ Agregar peliculas a la seleccion ------------------------------>
 const movies_selected = []
 let $cards = document.querySelectorAll('.card')
@@ -80,6 +84,7 @@ $cards.forEach(card => {
 // <------------------------------ Recomendar peliculas de la seleccion ------------------------------>
 const $sectionRecomendations = $('#movies-recomendations')
 const $sectionRecomendationsList = $('#movies-recomendations .list-movies')
+
 function sendMoviesToRecomend () {
   if (movies_selected.length === 0) return
   fetch('/api/movies/recomend', {
@@ -91,10 +96,9 @@ function sendMoviesToRecomend () {
   })
     .then(response => response.json())
     .then(movies => {
-      // console.log(movies)
       $sectionRecomendationsList.innerHTML = ''
       movies.forEach(movie => {
-        const movieCard = document.importNode($movieTemplate, true)
+        const movieCard = document.importNode($cardMovieTemplate, true)
         // Añadimos el id
         movieCard.querySelector('.card').id = movie.id
 
@@ -131,7 +135,7 @@ $btnRecomendations.addEventListener('click', sendMoviesToRecomend)
 // <------------------------------ Actualizar el contenido de las peliculas Para ti ------------------------------>
 const $moviesForYouList = $('#movies-for-you .list-movies')
 const $movieForYouTemplate = $('#movie-template').content
-const $userId = $('#user-id').textContent
+// const $userId = $('#user-id').textContent
 
 function updateForYou(){
 	fetch('/api/movies/for-you')
@@ -143,7 +147,6 @@ function updateForYou(){
 const $refreshButton = $('#refresh-button')
 const $loadingIcon = $('#loading-icon')
 const $moviesPopularList = $('#movies_popular .list-movies')
-const $movieTemplate = $('#movie-template').content
 
 $refreshButton.addEventListener('click', () => {
   // Mostrar el icono de cargando
@@ -157,7 +160,7 @@ $refreshButton.addEventListener('click', () => {
 
       // Añadir las nuevas películas
       movies.forEach(movie => {
-        const movieCard = document.importNode($movieTemplate, true)
+        const movieCard = document.importNode($cardMovieTemplate, true)
 
         // Añadimos el id
         movieCard.querySelector('.card').id = movie.id
@@ -195,7 +198,6 @@ $refreshButton.addEventListener('click', () => {
 // <------------------------------ Manejar el filtrado de peliculas ------------------------------>
 const $formsFilter = $('#filter')
 const $sectionFilter = $('#movies_filter')
-const $filterCardTemplate = $('#movies-card-filter-template').content
 
 $formsFilter.addEventListener('submit', evt => {
   evt.preventDefault()
