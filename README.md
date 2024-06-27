@@ -73,6 +73,7 @@ Los datasets no se pudieron subir al repositorio debido al tamaño limite excedi
 
 - **Recomendaciones basadas en historial de calificaciones (redes profundas para matriz de factorización)**: El modelo de redes profundas para la matriz de factorización demostró ser efectivo para mejorar las recomendaciones basadas en el historial de calificaciones de los usuarios. Comparado con métodos tradicionales. Sin embargo, la complejidad computacional y el tiempo de entrenamiento pueden ser significativos, aunque los beneficios en precisión y personalización justifican estos costos.
 <br>
+
 - **Recomendaciones sin información sobre el usuario**: Las estrategias utilizadas para hacer recomendaciones cuando no se dispone de información sobre el usuario incluyeron métodos de recomendación basados en la popularidad. Esta estrategia demostró ser efectiva en términos de ofrecer recomendaciones relevantes y diversas, especialmente en escenarios donde la información del usuario es limitada o no disponible.
 
 ## Licencia
